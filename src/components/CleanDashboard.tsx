@@ -529,15 +529,16 @@ const CleanDashboard: React.FC = () => {
           {/* Fullscreen chart with Y-axis */}
           <div style={{ 
             display: 'flex', 
-            height: '70vh', 
-            padding: '20px',
+            height: isMobile ? '50vh' : isTablet ? '60vh' : '65vh', 
+            padding: isMobile ? '10px' : '15px',
             background: '#2a2a2a',
             borderRadius: '10px',
             flex: 1,
             width: selectedVariety ? 'calc(100% - 410px)' : '100%',
             marginLeft: selectedVariety ? '380px' : '0px',
             transition: 'margin-left 0.3s ease, width 0.3s ease',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            maxHeight: '600px'
           }}>
             {/* Y-axis */}
             <div style={{ 
@@ -548,8 +549,8 @@ const CleanDashboard: React.FC = () => {
               width: '60px',
               height: '100%',
               paddingRight: '10px',
-              paddingTop: '20px',
-              paddingBottom: '60px'
+              paddingTop: isMobile ? '10px' : '15px',
+              paddingBottom: isMobile ? '30px' : '45px'
             }}>
               {yAxisTicks.slice().reverse().map((tick, index) => (
                 <div key={index} style={{ 
@@ -579,7 +580,7 @@ const CleanDashboard: React.FC = () => {
               alignItems: 'end', 
               flex: 1,
               height: '100%',
-              paddingBottom: '40px',
+              paddingBottom: isMobile ? '25px' : '35px',
               gap: '10px'
             }}>
               {/* Group locations in pairs with proper spacing */}
@@ -587,12 +588,12 @@ const CleanDashboard: React.FC = () => {
                 <div key={pairIndex} style={{ display: 'flex', gap: selectedVariety ? '8px' : '12px', marginRight: pairIndex < 2 ? (selectedVariety ? '20px' : '40px') : '0px', alignItems: 'end' }}>
                   {locationPair.map((location) => (
                     <div key={location} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%' }}>
-                      <div style={{ display: 'flex', alignItems: 'end', gap: selectedVariety ? '2px' : '4px', height: '500px', alignSelf: 'end' }}>
+                      <div style={{ display: 'flex', alignItems: 'end', gap: selectedVariety ? '2px' : '4px', height: isMobile ? '300px' : isTablet ? '350px' : '400px', alignSelf: 'end' }}>
                     {varieties.map((variety, index) => {
                       const item = filteredData.find(d => d.variety === variety && d.location === location);
                       const value = item ? item.value : 0;
-                      // Calculate height in pixels for fullscreen (approximately 500px available height)
-                      const availableHeight = 500;
+                      // Calculate height in pixels for fullscreen - responsive height calculation
+                      const availableHeight = isMobile ? 280 : isTablet ? 330 : 380;
                       const heightPx = (value / chartMaxValue) * availableHeight;
                       const isHovered = hoveredVariety === variety;
                       const isSelected = selectedVariety === variety;
@@ -630,7 +631,7 @@ const CleanDashboard: React.FC = () => {
                       );
                     })}
                   </div>
-                      <span style={{ fontSize: '18px', marginTop: '15px', fontWeight: 'bold', color: 'white' }}>{location}</span>
+                      <span style={{ fontSize: isMobile ? '14px' : '16px', marginTop: isMobile ? '8px' : '12px', fontWeight: 'bold', color: 'white' }}>{location}</span>
                     </div>
                   ))}
                 </div>
@@ -643,29 +644,32 @@ const CleanDashboard: React.FC = () => {
             display: 'flex', 
             flexWrap: varieties.length > 8 ? 'wrap' : 'nowrap', 
             justifyContent: 'center', 
-            gap: varieties.length > 6 ? '6px' : '12px',
-            padding: '20px',
+            gap: varieties.length > 6 ? '4px' : '8px',
+            padding: isMobile ? '10px' : '15px',
             marginLeft: selectedVariety ? '380px' : '0px',
             transition: 'margin-left 0.3s ease',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            maxHeight: '80px'
           }}>
             {varieties.map((variety, index) => {
               const isHovered = hoveredVariety === variety;
               const isSelected = selectedVariety === variety;
               const opacity = hoveredVariety && !isHovered ? 0.3 : 1;
               
-              // Dynamic font size for fullscreen legend
+              // Dynamic font size for fullscreen legend - more compact
               const getFullscreenFontSize = () => {
-                if (varieties.length <= 4) return '16px';
-                if (varieties.length <= 6) return '14px';
-                if (varieties.length <= 8) return '13px';
-                return '12px';
+                if (isMobile) return varieties.length <= 4 ? '12px' : '10px';
+                if (varieties.length <= 4) return '14px';
+                if (varieties.length <= 6) return '12px';
+                if (varieties.length <= 8) return '11px';
+                return '10px';
               };
               
               const getFullscreenPadding = () => {
-                if (varieties.length <= 4) return '8px 12px';
-                if (varieties.length <= 6) return '6px 10px';
-                return '4px 8px';
+                if (isMobile) return '3px 6px';
+                if (varieties.length <= 4) return '6px 10px';
+                if (varieties.length <= 6) return '4px 8px';
+                return '3px 6px';
               };
               
               return (
