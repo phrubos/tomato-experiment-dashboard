@@ -546,26 +546,26 @@ const CleanDashboard: React.FC = () => {
               flexDirection: 'column', 
               justifyContent: 'space-between',
               alignItems: 'flex-end',
-              width: '60px',
+              width: isMobile ? '30px' : '40px',
               height: '100%',
-              paddingRight: '10px',
+              paddingRight: isMobile ? '2px' : '4px',
               paddingTop: isMobile ? '10px' : '15px',
               paddingBottom: isMobile ? '30px' : '45px'
             }}>
               {yAxisTicks.slice().reverse().map((tick, index) => (
                 <div key={index} style={{ 
                   color: 'white', 
-                  fontSize: '14px', 
+                  fontSize: isMobile ? '10px' : '12px', 
                   fontWeight: 'bold',
                   position: 'relative'
                 }}>
                   {tick}
                   <div style={{
                     position: 'absolute',
-                    right: '-15px',
+                    right: isMobile ? '-4px' : '-6px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    width: '10px',
+                    width: isMobile ? '3px' : '4px',
                     height: '1px',
                     background: 'rgba(255,255,255,0.3)'
                   }} />
@@ -576,24 +576,38 @@ const CleanDashboard: React.FC = () => {
             {/* Chart area */}
             <div style={{ 
               display: 'flex', 
-              justifyContent: 'center', 
+              justifyContent: 'space-between', 
               alignItems: 'end', 
               flex: 1,
               height: '100%',
               paddingBottom: isMobile ? '25px' : '35px',
-              gap: '10px'
+              paddingLeft: isMobile ? '8px' : '12px',
+              paddingRight: isMobile ? '8px' : '12px',
+              gap: selectedVariety ? (isMobile ? '6px' : '8px') : (isMobile ? '10px' : '12px')
             }}>
               {/* Group locations in pairs with proper spacing */}
               {[['M-I', 'M-II'], ['Cs-I', 'Cs-II'], ['L-I', 'L-II']].map((locationPair, pairIndex) => (
-                <div key={pairIndex} style={{ display: 'flex', gap: selectedVariety ? '8px' : '12px', marginRight: pairIndex < 2 ? (selectedVariety ? '20px' : '40px') : '0px', alignItems: 'end' }}>
+                <div key={pairIndex} style={{ 
+                  display: 'flex', 
+                  gap: selectedVariety ? '6px' : '10px', 
+                  flex: 1, 
+                  justifyContent: 'center', 
+                  alignItems: 'end'
+                }}>
                   {locationPair.map((location) => (
                     <div key={location} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%' }}>
                       <div style={{ display: 'flex', alignItems: 'end', gap: selectedVariety ? '2px' : '4px', height: isMobile ? '300px' : isTablet ? '350px' : '400px', alignSelf: 'end' }}>
                     {varieties.map((variety, index) => {
                       const item = filteredData.find(d => d.variety === variety && d.location === location);
                       const value = item ? item.value : 0;
-                      // Calculate height in pixels for fullscreen - responsive height calculation
-                      const availableHeight = isMobile ? 280 : isTablet ? 330 : 380;
+                      // Calculate height in pixels for fullscreen - match Y-axis container
+                      // Fullscreen container uses vh units, so calculate based on actual container
+                      const fullscreenContainerPadding = isMobile ? 10 : 15;
+                      const yAxisPaddingTop = isMobile ? 10 : 15;
+                      const yAxisPaddingBottom = isMobile ? 30 : 45;
+                      // Available height is the Y-axis area minus its paddings
+                      const availableHeight = (isMobile ? window.innerHeight * 0.5 : isTablet ? window.innerHeight * 0.6 : window.innerHeight * 0.65) 
+                        - (fullscreenContainerPadding * 2) - yAxisPaddingTop - yAxisPaddingBottom;
                       const heightPx = (value / chartMaxValue) * availableHeight;
                       const isHovered = hoveredVariety === variety;
                       const isSelected = selectedVariety === variety;
@@ -770,26 +784,26 @@ const CleanDashboard: React.FC = () => {
             flexDirection: 'column', 
             justifyContent: 'space-between',
             alignItems: 'flex-end',
-            width: '35px',
+            width: '25px',
             height: '100%',
-            paddingRight: '5px',
+            paddingRight: '2px',
             paddingTop: '10px',
             paddingBottom: '30px'
           }}>
             {yAxisTicks.slice().reverse().map((tick, index) => (
               <div key={index} style={{ 
                 color: 'white', 
-                fontSize: '9px', 
+                fontSize: '8px', 
                 fontWeight: 'bold',
                 position: 'relative'
               }}>
                 {tick}
                 <div style={{
                   position: 'absolute',
-                  right: '-7px',
+                  right: '-3px',
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  width: '4px',
+                  width: '2px',
                   height: '1px',
                   background: 'rgba(255,255,255,0.3)'
                 }} />
@@ -800,18 +814,26 @@ const CleanDashboard: React.FC = () => {
           {/* Chart area */}
           <div style={{ 
             display: 'flex', 
-            justifyContent: 'center', 
+            justifyContent: 'space-between', 
             alignItems: 'end', 
             flex: 1,
             height: '100%',
             paddingBottom: '20px',
             paddingTop: '10px',
-            gap: '4px',
+            paddingLeft: isMobile ? '6px' : '10px',
+            paddingRight: isMobile ? '6px' : '10px',
+            gap: selectedVariety ? (isMobile ? '4px' : '6px') : (isMobile ? '8px' : '10px'),
             minWidth: '0'
           }}>
             {/* Group locations in pairs with proper spacing */}
             {[['M-I', 'M-II'], ['Cs-I', 'Cs-II'], ['L-I', 'L-II']].map((locationPair, pairIndex) => (
-              <div key={pairIndex} style={{ display: 'flex', gap: selectedVariety ? '3px' : '4px', marginRight: pairIndex < 2 ? (selectedVariety ? '8px' : '12px') : '0px', transition: 'gap 0.3s ease, margin-right 0.3s ease' }}>
+              <div key={pairIndex} style={{ 
+                display: 'flex', 
+                gap: selectedVariety ? '3px' : '5px', 
+                flex: 1, 
+                justifyContent: 'center', 
+                transition: 'gap 0.3s ease'
+              }}>
                 {locationPair.map((location) => (
                   <div key={location} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'end', gap: '1px', height: 'calc(100% - 25px)' }}>
