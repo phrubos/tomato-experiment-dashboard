@@ -583,20 +583,20 @@ const CleanDashboard: React.FC = () => {
               paddingBottom: isMobile ? '25px' : '35px',
               paddingLeft: isMobile ? '8px' : '12px',
               paddingRight: isMobile ? '8px' : '12px',
-              gap: selectedVariety ? (isMobile ? '6px' : '8px') : (isMobile ? '10px' : '12px')
+              gap: selectedVariety ? (isMobile ? '1px' : '2px') : (isMobile ? '3px' : '4px')
             }}>
               {/* Group locations in pairs with proper spacing */}
               {[['M-I', 'M-II'], ['Cs-I', 'Cs-II'], ['L-I', 'L-II']].map((locationPair, pairIndex) => (
                 <div key={pairIndex} style={{ 
                   display: 'flex', 
-                  gap: selectedVariety ? '6px' : '10px', 
+                  gap: selectedVariety ? '8px' : '10px', 
                   flex: 1, 
                   justifyContent: 'center', 
                   alignItems: 'end'
                 }}>
                   {locationPair.map((location) => (
                     <div key={location} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%' }}>
-                      <div style={{ display: 'flex', alignItems: 'end', gap: selectedVariety ? '2px' : '4px', height: isMobile ? '300px' : isTablet ? '350px' : '400px', alignSelf: 'end' }}>
+                      <div style={{ display: 'flex', alignItems: 'end', gap: selectedVariety ? '1px' : '2px', height: isMobile ? '300px' : isTablet ? '350px' : '400px', alignSelf: 'end' }}>
                     {varieties.map((variety, index) => {
                       const item = filteredData.find(d => d.variety === variety && d.location === location);
                       const value = item ? item.value : 0;
@@ -617,7 +617,7 @@ const CleanDashboard: React.FC = () => {
                         <div
                           key={variety}
                           style={{
-                            width: selectedVariety ? '20px' : '35px',
+                            width: selectedVariety ? '15px' : '30px',
                             height: `${heightPx}px`,
                             backgroundColor: colors[index % colors.length],
                             borderRadius: '4px 4px 0 0',
@@ -822,21 +822,21 @@ const CleanDashboard: React.FC = () => {
             paddingTop: '10px',
             paddingLeft: isMobile ? '6px' : '10px',
             paddingRight: isMobile ? '6px' : '10px',
-            gap: selectedVariety ? (isMobile ? '2px' : '3px') : (isMobile ? '4px' : '6px'),
+            gap: selectedVariety ? (isMobile ? '0.5px' : '1px') : (isMobile ? '1px' : '2px'),
             minWidth: '0'
           }}>
             {/* Group locations in pairs with proper spacing */}
             {[['M-I', 'M-II'], ['Cs-I', 'Cs-II'], ['L-I', 'L-II']].map((locationPair, pairIndex) => (
               <div key={pairIndex} style={{ 
                 display: 'flex', 
-                gap: selectedVariety ? '3px' : '5px', 
+                gap: selectedVariety ? '5px' : '6px', 
                 flex: 1, 
                 justifyContent: 'center', 
                 transition: 'gap 0.3s ease'
               }}>
                 {locationPair.map((location) => (
                   <div key={location} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'end', gap: '1px', height: 'calc(100% - 25px)' }}>
+                    <div style={{ display: 'flex', alignItems: 'end', gap: selectedVariety ? '0.5px' : '1px', height: 'calc(100% - 25px)' }}>
                   {varieties.map((variety, index) => {
                     const item = filteredData.find(d => d.variety === variety && d.location === location);
                     const value = item ? item.value : 0;
@@ -851,7 +851,7 @@ const CleanDashboard: React.FC = () => {
                       <div
                         key={variety}
                         style={{
-                          width: selectedVariety ? '6px' : '9px',
+                          width: selectedVariety ? '8px' : '12px',
                           height: `${heightPx}px`,
                           backgroundColor: colors[index % colors.length],
                           borderRadius: '2px 2px 0 0',
