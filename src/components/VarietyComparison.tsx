@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Line, Area, AreaChart, Cell } from 'recharts';
 
 interface VarietyComparisonProps {
@@ -24,6 +24,27 @@ const VarietyComparison: React.FC<VarietyComparisonProps> = ({
   spoiledYieldData,
   onClose
 }) => {
+  const [screenSize, setScreenSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Responsive breakpoints
+  const isMobile = screenSize.width < 768;
+  const isTablet = screenSize.width >= 768 && screenSize.width < 1024;
+  const isLaptop = screenSize.width >= 1024 && screenSize.width < 1440;
   const comparisonData = useMemo(() => {
     // Get category of selected variety
     const selectedData = ripeYieldData.find(d => d.variety === selectedVariety);
@@ -145,8 +166,8 @@ const VarietyComparison: React.FC<VarietyComparisonProps> = ({
       <div style={{
         background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
         borderRadius: '20px',
-        padding: '30px',
-        maxWidth: '1400px',
+        padding: isMobile ? '15px' : isTablet ? '20px' : '30px',
+        maxWidth: isMobile ? '100%' : '1400px',
         width: '100%',
         maxHeight: '90vh',
         overflow: 'auto',
@@ -163,7 +184,7 @@ const VarietyComparison: React.FC<VarietyComparisonProps> = ({
           <div>
             <h2 style={{
               color: 'white',
-              fontSize: '28px',
+              fontSize: isMobile ? '20px' : isTablet ? '24px' : '28px',
               margin: '0 0 10px 0',
               display: 'flex',
               alignItems: 'center',
@@ -173,7 +194,7 @@ const VarietyComparison: React.FC<VarietyComparisonProps> = ({
                 background: categoryColor,
                 padding: '8px 16px',
                 borderRadius: '10px',
-                fontSize: '20px'
+                fontSize: isMobile ? '16px' : '20px'
               }}>
                 {selectedVariety}
               </span>
@@ -198,7 +219,7 @@ const VarietyComparison: React.FC<VarietyComparisonProps> = ({
               borderRadius: '12px',
               padding: '12px 24px',
               cursor: 'pointer',
-              fontSize: '16px',
+              fontSize: isMobile ? '12px' : '14px',
               fontWeight: 'bold',
               transition: 'all 0.2s'
             }}
@@ -218,9 +239,9 @@ const VarietyComparison: React.FC<VarietyComparisonProps> = ({
         {/* Main Content Grid */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: '20px',
-          marginBottom: '20px'
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+          gap: isMobile ? '15px' : '20px',
+          marginBottom: isMobile ? '15px' : '20px'
         }}>
           {/* Average Yield Comparison */}
           <div style={{

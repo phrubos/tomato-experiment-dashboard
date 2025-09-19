@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import VarietyComparison from './VarietyComparison';
 
 // Inline data
@@ -249,12 +249,34 @@ interface ChartData {
 }
 
 const CleanDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'4soros' | '50toves'>('4soros');
-  const [hoveredVariety, setHoveredVariety] = useState<string | null>(null);
   const [selectedVariety, setSelectedVariety] = useState<string | null>(null);
+  const [hoveredVariety, setHoveredVariety] = useState<string | null>(null);
   const [selectedDataType, setSelectedDataType] = useState<'ripe' | 'spoiled'>('ripe');
-  const [fullscreenChart, setFullscreenChart] = useState<string | null>(null);
+  const [fullscreenChart, setFullscreenChart] = useState<any>(null);
   const [showComparison, setShowComparison] = useState(false);
+  const [activeTab, setActiveTab] = useState<'4soros' | '50toves'>('4soros');
+  const [screenSize, setScreenSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Responsive breakpoints
+  const isMobile = screenSize.width < 768;
+  const isTablet = screenSize.width >= 768 && screenSize.width < 1024;
+  const isLaptop = screenSize.width >= 1024 && screenSize.width < 1440;
+  const isDesktop = screenSize.width >= 1440;
 
   const generateYAxisTicks = (maxValue: number) => {
     // Create 5-6 evenly spaced ticks
@@ -950,13 +972,14 @@ const CleanDashboard: React.FC = () => {
       )}
       
       <div style={{ maxWidth: '100%', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+        <div style={{ textAlign: 'center', marginBottom: isMobile ? '20px' : '30px' }}>
           <h1 style={{ 
             color: 'white', 
-            fontSize: '2.8rem', 
+            fontSize: isMobile ? '1.5rem' : isTablet ? '2rem' : isLaptop ? '2.4rem' : '2.8rem', 
             margin: '0 0 10px 0',
             textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            lineHeight: isMobile ? '1.3' : '1.2'
           }}>
             🍅 Ipari paradicsom fajtakísérletek, 2025
           </h1>
@@ -970,20 +993,24 @@ const CleanDashboard: React.FC = () => {
           </p>
           <p style={{ 
             color: 'rgba(255,255,255,0.7)', 
-            fontSize: '1rem', 
+            fontSize: isMobile ? '0.85rem' : '1rem', 
             margin: '10px 0 0 0',
-            textShadow: '1px 1px 2px rgba(0,0,0,0.3)'
+            textShadow: '1px 1px 2px rgba(0,0,0,0.3)',
+            padding: isMobile ? '0 10px' : '0'
           }}>
-            💡 Kattints egy oszlopra a részletes adatokért
+            💡 {isMobile ? 'Kattints egy oszlopra' : 'Kattints egy oszlopra a részletes adatokért'}
           </p>
         </div>
 
         {/* Tab Navigation */}
         <div style={{ 
           display: 'flex', 
+          flexDirection: isMobile ? 'column' : 'row',
           justifyContent: 'center', 
-          marginBottom: '30px',
-          gap: '10px'
+          alignItems: isMobile ? 'stretch' : 'center',
+          marginBottom: isMobile ? '20px' : '30px',
+          gap: '10px',
+          padding: isMobile ? '0 20px' : '0'
         }}>
           <button
             onClick={() => {
@@ -997,9 +1024,9 @@ const CleanDashboard: React.FC = () => {
               color: 'white',
               border: activeTab === '4soros' ? '2px solid #60a5fa' : '2px solid rgba(255, 255, 255, 0.2)',
               borderRadius: '15px',
-              padding: '12px 24px',
+              padding: isMobile ? '10px 16px' : '12px 24px',
               cursor: 'pointer',
-              fontSize: '16px',
+              fontSize: isMobile ? '14px' : '16px',
               fontWeight: 'bold',
               transition: 'all 0.3s',
               backdropFilter: 'blur(10px)',
@@ -1035,9 +1062,9 @@ const CleanDashboard: React.FC = () => {
               color: 'white',
               border: activeTab === '50toves' ? '2px solid #60a5fa' : '2px solid rgba(255, 255, 255, 0.2)',
               borderRadius: '15px',
-              padding: '12px 24px',
+              padding: isMobile ? '10px 16px' : '12px 24px',
               cursor: 'pointer',
-              fontSize: '16px',
+              fontSize: isMobile ? '14px' : '16px',
               fontWeight: 'bold',
               transition: 'all 0.3s',
               backdropFilter: 'blur(10px)',
@@ -1066,8 +1093,10 @@ const CleanDashboard: React.FC = () => {
         {activeTab === '4soros' && (
           <div style={{ 
             display: 'grid', 
-            gridTemplateColumns: selectedVariety ? '300px 1fr' : '1fr',
-            gap: '15px',
+            gridTemplateColumns: selectedVariety 
+              ? (isMobile ? '1fr' : isTablet ? '250px 1fr' : '300px 1fr')
+              : '1fr',
+            gap: isMobile ? '10px' : '15px',
             alignItems: 'start',
             transition: 'grid-template-columns 0.3s ease'
           }}>
@@ -1076,10 +1105,11 @@ const CleanDashboard: React.FC = () => {
             <div style={{
               background: 'rgba(45, 55, 72, 0.9)',
               borderRadius: '12px',
-              padding: '15px',
-              position: 'sticky',
-              top: '20px',
-              color: 'white'
+              padding: isMobile ? '12px' : '15px',
+              position: isMobile ? 'relative' : 'sticky',
+              top: isMobile ? 'auto' : '20px',
+              color: 'white',
+              order: isMobile ? 2 : 1
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                 <h3 style={{ 
@@ -1242,20 +1272,20 @@ const CleanDashboard: React.FC = () => {
             </div>
           )}
 
-          <div style={{ overflow: 'hidden' }}>
+          <div style={{ overflow: 'hidden', order: isMobile ? 1 : 2 }}>
             <div style={{
               background: 'rgba(30, 30, 30, 0.95)',
               borderRadius: '15px',
-              padding: '20px',
-              marginBottom: '20px',
+              padding: isMobile ? '15px' : '20px',
+              marginBottom: isMobile ? '15px' : '20px',
               border: '1px solid rgba(255, 255, 255, 0.1)'
             }}>
-              <h2 style={{ textAlign: 'center', color: '#fff', marginBottom: '15px', fontSize: '24px' }}>
+              <h2 style={{ textAlign: 'center', color: '#fff', marginBottom: '15px', fontSize: isMobile ? '18px' : '24px' }}>
                 📊 Érett bogyó mennyisége (t/ha)
               </h2>
               <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: 'repeat(3, 1fr)',
+                gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
                 gap: '10px'
               }}>
                 {renderChart(ripeYieldData, 'UG sorozat', 'UG', 'ug-ripe', 'ripe')}
@@ -1267,15 +1297,15 @@ const CleanDashboard: React.FC = () => {
             <div style={{
               background: 'rgba(30, 30, 30, 0.95)',
               borderRadius: '15px',
-              padding: '20px',
+              padding: isMobile ? '15px' : '20px',
               border: '1px solid rgba(255, 255, 255, 0.1)'
             }}>
-              <h2 style={{ textAlign: 'center', color: '#fff', marginBottom: '15px', fontSize: '24px' }}>
+              <h2 style={{ textAlign: 'center', color: '#fff', marginBottom: '15px', fontSize: isMobile ? '18px' : '24px' }}>
                 📉 Romló bogyó mennyisége (t/ha)
               </h2>
               <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: 'repeat(3, 1fr)',
+                gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
                 gap: '10px'
               }}>
                 {renderChart(spoiledYieldData, 'UG sorozat', 'UG', 'ug-spoiled', 'spoiled')}
