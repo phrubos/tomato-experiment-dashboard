@@ -720,9 +720,9 @@ const CleanDashboard: React.FC = () => {
       <div style={{
         background: 'rgba(30, 30, 30, 0.95)',
         borderRadius: '12px',
-        padding: '12px',
-        margin: '5px',
-        height: '520px',
+        padding: isMobile ? '8px' : '12px',
+        margin: '0',
+        height: isMobile ? '400px' : isTablet ? '500px' : '600px',
         display: 'flex',
         flexDirection: 'column',
         border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -752,12 +752,13 @@ const CleanDashboard: React.FC = () => {
         {/* Chart with Y-axis */}
         <div style={{ 
           display: 'flex', 
-          height: '380px', 
-          padding: '10px',
+          height: 'calc(100% - 80px)', 
+          padding: isMobile ? '8px' : '10px',
           background: '#2a2a2a',
           borderRadius: '8px',
           flex: 1,
-          overflow: 'hidden'
+          overflow: 'hidden',
+          minHeight: isMobile ? '280px' : '350px'
         }}>
           {/* Y-axis */}
           <div style={{ 
@@ -813,8 +814,8 @@ const CleanDashboard: React.FC = () => {
                   {varieties.map((variety, index) => {
                     const item = filteredData.find(d => d.variety === variety && d.location === location);
                     const value = item ? item.value : 0;
-                    // Calculate height in pixels based on chart area (approximately 300px available height)
-                    const availableHeight = 300;
+                    // Calculate height in pixels based on chart area - dynamic height calculation
+                    const availableHeight = isMobile ? 250 : isTablet ? 320 : 400;
                     const heightPx = (value / chartMaxValue) * availableHeight;
                     const isHovered = hoveredVariety === variety;
                     const isSelected = selectedVariety === variety;
@@ -1272,12 +1273,18 @@ const CleanDashboard: React.FC = () => {
             </div>
           )}
 
-          <div style={{ overflow: 'hidden', order: isMobile ? 1 : 2 }}>
+          <div style={{ 
+            overflow: 'hidden', 
+            order: isMobile ? 1 : 2,
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: isMobile ? '10px' : '15px'
+          }}>
+            {/* Érett bogyó konténer */}
             <div style={{
               background: 'rgba(30, 30, 30, 0.95)',
               borderRadius: '15px',
               padding: isMobile ? '15px' : '20px',
-              marginBottom: isMobile ? '15px' : '20px',
               border: '1px solid rgba(255, 255, 255, 0.1)'
             }}>
               <h2 style={{ textAlign: 'center', color: '#fff', marginBottom: '15px', fontSize: isMobile ? '18px' : '24px' }}>
@@ -1285,8 +1292,8 @@ const CleanDashboard: React.FC = () => {
               </h2>
               <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
-                gap: '10px'
+                gridTemplateColumns: '1fr',
+                gap: isMobile ? '6px' : '8px'
               }}>
                 {renderChart(ripeYieldData, 'UG sorozat', 'UG', 'ug-ripe', 'ripe')}
                 {renderChart(ripeYieldData, 'N sorozat', 'N', 'n-ripe', 'ripe')}
@@ -1294,6 +1301,7 @@ const CleanDashboard: React.FC = () => {
               </div>
             </div>
 
+            {/* Romló bogyó konténer */}
             <div style={{
               background: 'rgba(30, 30, 30, 0.95)',
               borderRadius: '15px',
@@ -1305,8 +1313,8 @@ const CleanDashboard: React.FC = () => {
               </h2>
               <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
-                gap: '10px'
+                gridTemplateColumns: '1fr',
+                gap: isMobile ? '6px' : '8px'
               }}>
                 {renderChart(spoiledYieldData, 'UG sorozat', 'UG', 'ug-spoiled', 'spoiled')}
                 {renderChart(spoiledYieldData, 'N sorozat', 'N', 'n-spoiled', 'spoiled')}
