@@ -822,7 +822,7 @@ const CleanDashboard: React.FC = () => {
             paddingTop: '10px',
             paddingLeft: isMobile ? '6px' : '10px',
             paddingRight: isMobile ? '6px' : '10px',
-            gap: selectedVariety ? (isMobile ? '4px' : '6px') : (isMobile ? '8px' : '10px'),
+            gap: selectedVariety ? (isMobile ? '2px' : '3px') : (isMobile ? '4px' : '6px'),
             minWidth: '0'
           }}>
             {/* Group locations in pairs with proper spacing */}
