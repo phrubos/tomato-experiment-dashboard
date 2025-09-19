@@ -252,12 +252,34 @@ const VarietyComparison: React.FC<VarietyComparisonProps> = ({
                 />
                 <YAxis stroke="white" tick={{ fill: 'white' }} />
                 <Tooltip 
-                  contentStyle={{
-                    background: 'rgba(30, 41, 59, 0.95)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    borderRadius: '8px'
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload;
+                      const entry = comparisonData.varietyAverages.find(item => item.variety === data.variety);
+                      const color = entry?.isSelected ? '#ef4444' : categoryColor;
+                      
+                      return (
+                        <div style={{
+                          background: 'rgba(30, 41, 59, 0.95)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '8px',
+                          padding: '8px 12px',
+                          color: 'white'
+                        }}>
+                          <p style={{ margin: '0 0 4px 0', color: 'white' }}>{label}</p>
+                          <p style={{ 
+                            margin: 0, 
+                            color: color,
+                            fontWeight: 'bold'
+                          }}>
+                            <span style={{ color: color }}>Átlag érett (t/ha): </span>
+                            <span style={{ color: color }}>{payload[0].value}</span>
+                          </p>
+                        </div>
+                      );
+                    }
+                    return null;
                   }}
-                  labelStyle={{ color: 'white' }}
                 />
                 <Bar 
                   dataKey="avgRipe" 
